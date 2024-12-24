@@ -1,0 +1,83 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tile {
+  background-color: #fff;
+  border: 2px solid #4CAF50;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #2c3e50;
+  font-weight: bold;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.tile.start {
+  border-color: #4CAF50;
+  background-color: #E8F5E9;
+}
+
+.tile.shop {
+  border-color: #FF6B6B;
+  background-color: #FFF3F3;
+}
+
+.tile.market {
+  border-color: #4ECDC4;
+  background-color: #F0FFFE;
+}
+
+.tile.event {
+  border-color: #FFBE0B;
+  background-color: #FFF8E6;
+}
+
+.game-info {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.player-info {
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.player-token {
+  background-color: #FF6B6B;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-top: 4px;
+  transition: all 0.3s ease;
+  animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+  0% { transform: scale(0.3); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
