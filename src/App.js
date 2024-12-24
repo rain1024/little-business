@@ -8,9 +8,9 @@ import { GameControls } from "./components/GameControls";
 import { GameTitle } from "./components/GameTitle";
 
 function App() {
-  const { gameState } = useGameState();
+  const { gameState, updateGameState, updatePlayer } = useGameState();
   const { rollDice, handleBuyItem, handleSellItem, closeModal } =
-    useGameActions();
+    useGameActions(gameState, updateGameState, updatePlayer);
 
   return (
     <div className="App">

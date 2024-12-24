@@ -7,11 +7,11 @@ export function GameControls({
   return (
     <div className="game-controls">
       <button
+        className="roll-dice-button"
         onClick={onRollDice}
         disabled={isMoving}
-        className={`roll-button ${isMoving ? "disabled" : ""}`}
       >
-        {isMoving ? "Moving..." : "Roll Dice"}
+        Roll Dice
       </button>
       <span className="player-turn">
         Current Player: {currentPlayer}

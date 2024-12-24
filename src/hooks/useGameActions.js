@@ -1,8 +1,4 @@
-import { useGameState } from "./useGameState";
-
-export function useGameActions() {
-  const { gameState, updateGameState, updatePlayer } = useGameState();
-
+export function useGameActions(gameState, updateGameState, updatePlayer) {
   const rollDice = () => {
     if (gameState.isMoving) return;
 
@@ -16,11 +12,12 @@ export function useGameActions() {
   };
 
   const movePlayer = (playerIndex, startPos, steps, finalPos) => {
-    let step = 0;
+    let currentStep = 0;
     const moveInterval = setInterval(() => {
-      if (step < steps) {
-        step++;
-        updatePlayer(playerIndex, { position: (startPos + step) % 20 });
+      if (currentStep < steps) {
+        const newPosition = (startPos + currentStep + 1) % 20;
+        updatePlayer(playerIndex, { position: newPosition });
+        currentStep++;
       } else {
         clearInterval(moveInterval);
         handleMovementComplete(playerIndex, finalPos);
@@ -32,18 +29,18 @@ export function useGameActions() {
     updateGameState({
       isMoving: false,
       currentPlayer: gameState.currentPlayer === 1 ? 2 : 1,
-      showModal: true
+      showModal: true,
     });
   };
 
   const handleBuyItem = (item) => {
     const currentPlayerIndex = gameState.currentPlayer - 1;
     const player = gameState.players[currentPlayerIndex];
-    
+
     if (player.money >= item.price) {
       updatePlayer(currentPlayerIndex, {
         money: player.money - item.price,
-        inventory: [...player.inventory, item]
+        inventory: [...player.inventory, item],
       });
     }
     closeModal();
@@ -53,13 +50,13 @@ export function useGameActions() {
     const currentPlayerIndex = gameState.currentPlayer - 1;
     const player = gameState.players[currentPlayerIndex];
     const item = player.inventory[itemIndex];
-    
+
     const newInventory = [...player.inventory];
     newInventory.splice(itemIndex, 1);
-    
+
     updatePlayer(currentPlayerIndex, {
       money: player.money + item.price,
-      inventory: newInventory
+      inventory: newInventory,
     });
     closeModal();
   };
