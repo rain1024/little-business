@@ -1,3 +1,5 @@
+import "./GameControls.css";
+
 export function GameControls({
   isMoving,
   currentPlayer,
@@ -10,9 +12,7 @@ export function GameControls({
         className="roll-dice-button"
         onClick={onRollDice}
         disabled={isMoving}
-      >
-        Roll Dice
-      </button>
+      />
       <span className="player-turn">
         Current Player: {currentPlayer}
         {currentDice && ` (Rolled: ${currentDice})`}

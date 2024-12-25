@@ -6,6 +6,7 @@ import { GameModal } from "./components/GameModal";
 import { PlayerInfo } from "./components/PlayerInfo";
 import { GameControls } from "./components/GameControls";
 import { GameTitle } from "./components/GameTitle";
+import { BackgroundMusic } from "./components/BackgroundMusic";
 
 function App() {
   const {
@@ -28,6 +29,7 @@ function App() {
 
   return (
     <div className="App">
+      <BackgroundMusic />
       <GameTitle title="Tiểu Thương Nhỏ" />
 
       <div className="game-info">

@@ -1,4 +1,5 @@
 import React from "react";
+import "./GameModal.css";
 
 export const GameModal = ({ type, data, currentPlayer, onClose }) => {
   const renderContent = () => {
