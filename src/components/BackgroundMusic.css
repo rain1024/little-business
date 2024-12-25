@@ -2,28 +2,62 @@
   position: fixed;
   top: 50%;
   left: 75%;
-  transform: translate(-5%, -5%);
-  width: 80px;
-  height: 80px;
-  padding: 8px;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  padding: 12px;
   border-radius: 50%;
-  border: none;
-  background: #fff;
+  border: 4px solid transparent;
+  background: linear-gradient(145deg, #FF6B6B, #FF8E53);
+  background-clip: padding-box;
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 
+    0 4px 15px rgba(255,107,107,0.3),
+    0 0 20px rgba(255,255,255,0.3),
+    inset 0 -2px 4px rgba(0,0,0,0.1),
+    inset 0 2px 4px rgba(255,255,255,0.2);
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 28px;
   z-index: 1000;
+  color: white;
+}
+
+.music-toggle::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  background: linear-gradient(45deg, #FFD700, #FF69B4, #00FFFF);
+  border-radius: 50%;
+  z-index: -1;
+  animation: borderRotate 4s linear infinite;
+  opacity: 0.8;
 }
 
 .music-toggle:hover {
-  transform: scale(1.1);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  transform: translate(-50%, -50%) scale(1.05);
+  background: linear-gradient(145deg, #FF8E53, #FF6B6B);
+  box-shadow: 
+    0 6px 20px rgba(255,107,107,0.4),
+    0 0 25px rgba(255,255,255,0.4),
+    inset 0 -2px 4px rgba(0,0,0,0.1),
+    inset 0 2px 4px rgba(255,255,255,0.2);
+}
+
+.music-toggle:hover::before {
+  animation: borderRotate 2s linear infinite;
 }
 
 .music-toggle:active {
-  transform: scale(0.95);
-} 
+  transform: translate(-50%, -50%) scale(0.95);
+  background: linear-gradient(145deg, #FF6B6B, #FF8E53);
+  box-shadow: 
+    0 2px 10px rgba(255,107,107,0.3),
+    inset 0 -1px 2px rgba(0,0,0,0.1),
+    inset 0 1px 2px rgba(255,255,255,0.2);
+}
