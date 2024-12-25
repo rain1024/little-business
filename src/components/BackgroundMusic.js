@@ -1,7 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import "./BackgroundMusic.css";
 
 export function BackgroundMusic() {
   const audioRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     audioRef.current = new Audio("./audio/background-1.mp3");
@@ -38,5 +40,19 @@ export function BackgroundMusic() {
     };
   }, []);
 
-  return null;
+  const toggleMusic = () => {
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  return (
+    <button onClick={toggleMusic} className="music-toggle">
+      {isPlaying ? "🔊" : "🔇"}
+    </button>
+  );
 }
