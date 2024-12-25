@@ -8,9 +8,23 @@ import { GameControls } from "./components/GameControls";
 import { GameTitle } from "./components/GameTitle";
 
 function App() {
-  const { gameState, updateGameState, updatePlayer } = useGameState();
-  const { rollDice, handleBuyItem, handleSellItem, closeModal } =
-    useGameActions(gameState, updateGameState, updatePlayer);
+  const {
+    gameState,
+    updateGameState,
+    updatePlayer,
+    movePlayer,
+    handleModal,
+    switchPlayer,
+  } = useGameState();
+
+  const { rollDice, closeModal, getCurrentPlayer } = useGameActions({
+    gameState,
+    updateGameState,
+    updatePlayer,
+    movePlayer,
+    handleModal,
+    switchPlayer,
+  });
 
   return (
     <div className="App">
@@ -28,13 +42,16 @@ function App() {
         onRollDice={rollDice}
       />
 
-      <Board players={gameState.players} />
+      <Board
+        players={gameState.players}
+        currentPlayer={gameState.currentPlayer}
+      />
 
-      {gameState.showModal && (
+      {gameState.modal.isOpen && (
         <GameModal
-          gameState={gameState}
-          onBuyItem={handleBuyItem}
-          onSellItem={handleSellItem}
+          type={gameState.modal.type}
+          data={gameState.modal.data}
+          currentPlayer={getCurrentPlayer().player}
           onClose={closeModal}
         />
       )}

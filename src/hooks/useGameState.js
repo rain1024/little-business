@@ -1,32 +1,79 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { INITIAL_PLAYER_STATE, BOARD_SIZE } from "../config/gameConfig";
 
-const initialState = {
+const createInitialState = () => ({
   currentPlayer: 1,
   players: [
-    { id: 1, position: 0, money: 1000, inventory: [] },
-    { id: 2, position: 0, money: 1000, inventory: [] },
+    { id: 1, ...INITIAL_PLAYER_STATE },
+    { id: 2, ...INITIAL_PLAYER_STATE },
   ],
   currentDice: null,
   isMoving: false,
-  showModal: false,
-  modalType: null,
-};
+  modal: {
+    isOpen: false,
+    type: null,
+    data: null,
+  },
+});
 
 export const useGameState = () => {
-  const [gameState, setGameState] = useState(initialState);
+  const [gameState, setGameState] = useState(createInitialState());
 
-  const updatePlayer = (playerIndex, updates) => {
+  const updatePlayer = useCallback((playerIndex, updates) => {
     setGameState((prev) => ({
       ...prev,
       players: prev.players.map((player, idx) =>
         idx === playerIndex ? { ...player, ...updates } : player
       ),
     }));
-  };
+  }, []);
 
-  const updateGameState = (updates) => {
+  const updateGameState = useCallback((updates) => {
     setGameState((prev) => ({ ...prev, ...updates }));
-  };
+  }, []);
 
-  return { gameState, updatePlayer, updateGameState };
+  const movePlayer = useCallback(
+    (playerIndex, startPosition, steps, finalPosition, onComplete) => {
+      let currentPosition = startPosition;
+      const moveInterval = setInterval(() => {
+        if (currentPosition === finalPosition) {
+          clearInterval(moveInterval);
+          updateGameState({ isMoving: false });
+          if (onComplete) onComplete();
+          return;
+        }
+        currentPosition = (currentPosition + 1) % BOARD_SIZE;
+        updatePlayer(playerIndex, { position: currentPosition });
+      }, 300);
+    },
+    [updatePlayer, updateGameState]
+  );
+
+  const handleModal = useCallback((type = null, data = null) => {
+    setGameState((prev) => ({
+      ...prev,
+      modal: {
+        isOpen: type !== null,
+        type,
+        data,
+      },
+    }));
+  }, []);
+
+  const switchPlayer = useCallback(() => {
+    setGameState((prev) => ({
+      ...prev,
+      currentPlayer: prev.currentPlayer === 1 ? 2 : 1,
+      currentDice: null,
+    }));
+  }, []);
+
+  return {
+    gameState,
+    updatePlayer,
+    updateGameState,
+    movePlayer,
+    handleModal,
+    switchPlayer,
+  };
 };

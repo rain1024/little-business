@@ -1,74 +1,84 @@
-export function useGameActions(gameState, updateGameState, updatePlayer) {
-  const rollDice = () => {
+import { useCallback } from "react";
+import { DICE_SIDES, BOARD_LAYOUT, TILE_TYPES } from "../config/gameConfig";
+import {
+  SHOP_EVENTS,
+  MARKET_EVENTS,
+  getRandomEvent,
+} from "../events/gameEvents";
+
+export function useGameActions({
+  gameState,
+  updateGameState,
+  updatePlayer,
+  movePlayer,
+  handleModal,
+  switchPlayer,
+}) {
+  const getCurrentPlayer = useCallback(() => {
+    const playerIndex = gameState.currentPlayer - 1;
+    return { player: gameState.players[playerIndex], index: playerIndex };
+  }, [gameState.currentPlayer, gameState.players]);
+
+  const handleTileEvent = useCallback(
+    (playerIndex, tileType) => {
+      const player = gameState.players[playerIndex];
+      const eventMap = {
+        [TILE_TYPES.SHOP]: {
+          events: SHOP_EVENTS,
+          type: "SHOP",
+        },
+        [TILE_TYPES.MARKET]: {
+          events: MARKET_EVENTS,
+          type: "MARKET",
+        },
+      };
+
+      const tileConfig = eventMap[tileType];
+      if (!tileConfig) {
+        switchPlayer();
+        return;
+      }
+
+      const event = getRandomEvent(tileConfig.events);
+      const updates = event.effect(player);
+      updatePlayer(playerIndex, updates);
+      handleModal(tileConfig.type, { event, player });
+    },
+    [gameState.players, updatePlayer, handleModal, switchPlayer]
+  );
+
+  const rollDice = useCallback(() => {
     if (gameState.isMoving) return;
 
-    const dice = Math.floor(Math.random() * 6) + 1;
-    const currentPlayerIndex = gameState.currentPlayer - 1;
-    const currentPosition = gameState.players[currentPlayerIndex].position;
-    const finalPosition = (currentPosition + dice) % 20;
+    const dice = Math.floor(Math.random() * DICE_SIDES) + 1;
+    const { player, index } = getCurrentPlayer();
+    const finalPosition = (player.position + dice) % BOARD_LAYOUT.length;
 
     updateGameState({ currentDice: dice, isMoving: true });
-    movePlayer(currentPlayerIndex, currentPosition, dice, finalPosition);
-  };
 
-  const movePlayer = (playerIndex, startPos, steps, finalPos) => {
-    let currentStep = 0;
-    const moveInterval = setInterval(() => {
-      if (currentStep < steps) {
-        const newPosition = (startPos + currentStep + 1) % 20;
-        updatePlayer(playerIndex, { position: newPosition });
-        currentStep++;
-      } else {
-        clearInterval(moveInterval);
-        handleMovementComplete(playerIndex, finalPos);
-      }
-    }, 500);
-  };
+    // Create callback for handling tile event after movement
+    const onMoveComplete = () => {
+      const tileType = BOARD_LAYOUT[finalPosition];
+      handleTileEvent(index, tileType);
+    };
 
-  const handleMovementComplete = (playerIndex, finalPosition) => {
-    updateGameState({
-      isMoving: false,
-      currentPlayer: gameState.currentPlayer === 1 ? 2 : 1,
-      showModal: true,
-    });
-  };
+    movePlayer(index, player.position, dice, finalPosition, onMoveComplete);
+  }, [
+    gameState.isMoving,
+    getCurrentPlayer,
+    updateGameState,
+    movePlayer,
+    handleTileEvent,
+  ]);
 
-  const handleBuyItem = (item) => {
-    const currentPlayerIndex = gameState.currentPlayer - 1;
-    const player = gameState.players[currentPlayerIndex];
-
-    if (player.money >= item.price) {
-      updatePlayer(currentPlayerIndex, {
-        money: player.money - item.price,
-        inventory: [...player.inventory, item],
-      });
-    }
-    closeModal();
-  };
-
-  const handleSellItem = (itemIndex) => {
-    const currentPlayerIndex = gameState.currentPlayer - 1;
-    const player = gameState.players[currentPlayerIndex];
-    const item = player.inventory[itemIndex];
-
-    const newInventory = [...player.inventory];
-    newInventory.splice(itemIndex, 1);
-
-    updatePlayer(currentPlayerIndex, {
-      money: player.money + item.price,
-      inventory: newInventory,
-    });
-    closeModal();
-  };
-
-  const closeModal = () => {
-    updateGameState({ showModal: false });
-  };
+  const closeModal = useCallback(() => {
+    handleModal();
+    switchPlayer();
+  }, [handleModal, switchPlayer]);
 
   return {
     rollDice,
-    handleBuyItem,
-    handleSellItem,
     closeModal,
+    getCurrentPlayer,
   };
 }
