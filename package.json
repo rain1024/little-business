@@ -3,15 +3,13 @@
   "version": "0.2.0",
   "private": true,
   "dependencies": {
-    "@react-three/fiber": "^8.17.10",
     "@react-three/drei": "^9.120.4",
-    "@types/three": "^0.154.0",
+    "@react-three/fiber": "^8.17.10",
     "cra-template": "1.2.0",
     "react": "^18.0.4",
     "react-dom": "^18.0.4",
     "react-scripts": "5.0.1",
-    "three": "^0.154.0",
-    "three-csg-ts": "^3.1.6",
+    "three-csg-ts": "^3.2.0",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
