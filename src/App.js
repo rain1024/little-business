@@ -4,7 +4,7 @@ import { useGameState } from "./hooks/useGameState";
 import { useGameActions } from "./hooks/useGameActions";
 import { GameModal } from "./components/GameModal";
 import { PlayerInfo } from "./components/PlayerInfo";
-import { GameControls } from "./components/GameControls";
+import GameControls from "./components/GameControls";
 import { GameTitle } from "./components/GameTitle";
 import { BackgroundMusic } from "./components/BackgroundMusic";
 
